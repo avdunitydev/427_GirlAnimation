@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterGirl : MonoBehaviour
 {
-	public float speed = 1;
+	public float speed = 1f;
 	public Transform sensGround;
 	public LayerMask layerGround;
 	SpriteRenderer sprr;
@@ -13,6 +13,7 @@ public class CharacterGirl : MonoBehaviour
 	float move;
 	bool isRight = true;
 	public bool isGround = false;
+	public float _xSpeed;
 
 
 	// Use this for initialization
@@ -27,7 +28,7 @@ public class CharacterGirl : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
 	{
-		
+		_xSpeed = Mathf.Abs (move);
 	}
 
 	void FixedUpdate ()
@@ -50,7 +51,7 @@ public class CharacterGirl : MonoBehaviour
 
 		if (isGround && (Input.GetAxis ("Vertical") > 0)) { 
 			anim.SetBool ("isGround", false);
-			girlCharacter.AddForce (new Vector2 (0, 700));
+			girlCharacter.AddForce (new Vector2 (0, 800));
 		}
 	}
 }
