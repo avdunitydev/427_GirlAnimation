@@ -11,9 +11,11 @@ public class CharacterGirl : MonoBehaviour
 	Rigidbody2D girlCharacter;
 	Animator anim;
 	float move;
-	bool isRight = true;
+	public bool isRight = true;
 	public bool isGround = false;
 	public float _xSpeed;
+
+	public Transform bullet_PF, bulletRed_PF;
 
 
 	// Use this for initialization
@@ -23,12 +25,6 @@ public class CharacterGirl : MonoBehaviour
 		girlCharacter = GetComponent<Rigidbody2D> ();
 		anim = GetComponent<Animator> ();
 
-	}
-	
-	// Update is called once per frame
-	void Update ()
-	{
-		_xSpeed = Mathf.Abs (move);
 	}
 
 	void FixedUpdate ()
@@ -41,6 +37,7 @@ public class CharacterGirl : MonoBehaviour
 		anim.SetFloat ("xSpeed", Mathf.Abs (move));
 
 		girlCharacter.velocity = new Vector2 (move * speed, girlCharacter.velocity.y);
+
 		if (move > 0 && !isRight) {
 			sprr.flipX = false;
 			isRight = true;
@@ -53,5 +50,28 @@ public class CharacterGirl : MonoBehaviour
 			anim.SetBool ("isGround", false);
 			girlCharacter.AddForce (new Vector2 (0, 800));
 		}
+
+		if (Input.GetKeyDown (KeyCode.RightControl)) {
+			GameObject fire;
+			if (Input.GetKey (KeyCode.LeftShift)) {
+				fire = BulletPoolManager.getObject (bulletRed_PF.name, new Vector3 (transform.position.x + 0.5f, transform.position.y - 0.5f, transform.position.z), 
+					Quaternion.identity);
+			} else {
+				fire = BulletPoolManager.getObject (bullet_PF.name, transform.position, Quaternion.identity);
+			}
+
+			if (isRight) {
+				fire.GetComponent<Bullet_PreFab> ().addForseToBullet (new Vector2 (500, 0));
+			} else {
+				fire.GetComponent<Bullet_PreFab> ().addForseToBullet (new Vector2 (-500, 0));
+			}
+		}
+
+	}
+
+	// Update is called once per frame
+	void Update ()
+	{
+		_xSpeed = Mathf.Abs (move);
 	}
 }
