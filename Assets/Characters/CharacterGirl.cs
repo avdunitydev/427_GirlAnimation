@@ -4,23 +4,31 @@ using UnityEngine;
 
 public class CharacterGirl : MonoBehaviour
 {
-	public float speed = 1f;
+	public float speed;
 	public Transform sensGround;
 	public LayerMask layerGround;
+	public Transform bullet_PF, bulletRed_PF;
+	public int fpc_HP;
+
 	SpriteRenderer sprr;
 	Rigidbody2D girlCharacter;
 	Animator anim;
+	GameObject fire;
+
 	float move;
-	public bool isRight = true;
-	public bool isGround = false;
-	public float _xSpeed;
+	bool isRight = true;
+	bool isGround = false;
 
-	public Transform bullet_PF, bulletRed_PF;
-
+	void Awake ()
+	{
+		
+	}
 
 	// Use this for initialization
 	void Start ()
 	{
+		speed = 6f;
+		fpc_HP = 10;
 		sprr = GetComponent<SpriteRenderer> ();
 		girlCharacter = GetComponent<Rigidbody2D> ();
 		anim = GetComponent<Animator> ();
@@ -51,27 +59,47 @@ public class CharacterGirl : MonoBehaviour
 			girlCharacter.AddForce (new Vector2 (0, 800));
 		}
 
-		if (Input.GetKeyDown (KeyCode.RightControl)) {
-			GameObject fire;
-			if (Input.GetKey (KeyCode.LeftShift)) {
-				fire = BulletPoolManager.getObject (bulletRed_PF.name, new Vector3 (transform.position.x + 0.5f, transform.position.y - 0.5f, transform.position.z), 
-					Quaternion.identity);
-			} else {
-				fire = BulletPoolManager.getObject (bullet_PF.name, transform.position, Quaternion.identity);
-			}
-
-			if (isRight) {
-				fire.GetComponent<Bullet_PreFab> ().addForseToBullet (new Vector2 (500, 0));
-			} else {
-				fire.GetComponent<Bullet_PreFab> ().addForseToBullet (new Vector2 (-500, 0));
-			}
-		}
-
+		fireFPC ();
 	}
 
 	// Update is called once per frame
 	void Update ()
 	{
-		_xSpeed = Mathf.Abs (move);
+	}
+
+	void fireDirection ()
+	{
+		if (isRight) {
+			fire.GetComponent<Bullet_PreFab> ().addForseToBullet (new Vector2 (500, 0));
+		} else {
+			fire.GetComponent<Bullet_PreFab> ().addForseToBullet (new Vector2 (-500, 0));
+		}
+	}
+
+	void fireFPC ()
+	{
+		if (Input.GetKeyDown (KeyCode.RightControl)) {
+			if (Input.GetKey (KeyCode.LeftShift)) {
+				fire = BulletPoolManager.getObject (bulletRed_PF.name, new Vector3 (transform.position.x + 0.5f, transform.position.y - 0.5f, transform.position.z), 
+					Quaternion.identity);
+				fireDirection ();
+			} else {
+				fire = BulletPoolManager.getObject (bullet_PF.name, transform.position, Quaternion.identity);
+				fireDirection ();
+			}
+		}
+	}
+
+	void OnCollisionEnter2D (Collision2D other)
+	{
+		if (fpc_HP <= 0) {
+			transform.position = new Vector3 (21, 0, 0); 
+			fpc_HP = 10;
+		}
+		if (other.transform.name == "BulletRed") {
+			--fpc_HP;
+			print ("CHARACTER HEALTH = " + fpc_HP);  
+			other.gameObject.SetActive (false);
+		}
 	}
 }

@@ -2,25 +2,26 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainButton : MonoBehaviour 
+public class MainButton : MonoBehaviour
 {
 	public float speed = 5f;
 	RectTransform rect;
 
 
-	void Start () 
+	void Start ()
 	{
-		rect = GetComponent<RectTransform>();
+		rect = GetComponent<RectTransform> ();
 	}
 
-	void Update () 
+	void Update ()
 	{
-		if (rect.offsetMin.y <= 0) 
-		{
+		if (rect.offsetMin.y <= 0) {
 			rect.offsetMin += new Vector2 (rect.offsetMin.x, speed);
 		}
 	}
-	void OnMouseDown () {
 
+	void OnMouseDown ()
+	{
+		UnityEngine.SceneManagement.SceneManager.LoadScene (1);
 	}
 }
