@@ -20,9 +20,9 @@ public class NPC : MonoBehaviour
 
 	float move;
 	bool isRight;
-	bool isSensG;
-	bool isSensL;
-	bool isSensR;
+	public bool isSensG;
+	public bool isSensL;
+	public bool isSensR;
 
 	float timer;
 
@@ -64,10 +64,10 @@ public class NPC : MonoBehaviour
 
 	void checkGround ()
 	{
-		isSensG = Physics2D.OverlapCapsule (sensGround.position, new Vector2 (0.1f, 1.8f), new CapsuleDirection2D (), 0, layerGround);
+		isSensG = Physics2D.OverlapCircle (sensGround.position, 0.2f, layerGround);
 		anim.SetBool ("isGround", isSensG);
-		isSensL = Physics2D.OverlapCircle (sensL.position, 0.2f, layerGround);
-		isSensR = Physics2D.OverlapCircle (sensR.position, 0.2f, layerGround);
+		isSensL = Physics2D.OverlapCapsule (sensL.position, new Vector2 (0.1f, 1.8f), new CapsuleDirection2D (), 0, layerGround);
+		isSensR = Physics2D.OverlapCapsule (sensR.position, new Vector2 (0.1f, 1.8f), new CapsuleDirection2D (), 0, layerGround);
 	}
 
 	void moveNPC ()
